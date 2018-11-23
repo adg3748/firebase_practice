@@ -1,0 +1,45 @@
+<head>
+        <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+    </head>
+    <body>
+        <div>
+            <input id="name" placeholder="名前">
+            <input id="message" placeholder="メッセージ">
+            <input id="test" placeholder="test">
+            <button id="send">投稿</button>
+        </div>
+        <ul id="messages"></ul>
+        <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyAbbWA6iYiGtZI9MJQUOTdmyzRZuSMtlhE",
+            authDomain: "sistacafe-messenger.firebaseapp.com",
+            databaseURL: "https://sistacafe-messenger.firebaseio.com",
+            projectId: "sistacafe-messenger",
+            storageBucket: "",
+            messagingSenderId: "456555249895"
+        };
+        firebase.initializeApp(config);
+            // データベースの参照を準備
+            var messagesRef = firebase.database().ref().child('messages')
+        
+            // 既存メッセージを表示
+            messagesRef.on('child_added', function(snapshot) {
+                var msg = snapshot.val();
+                $('<li>').text(msg.name + ': ' + msg.body + ': ' + msg.test).prependTo('#messages');
+            });
+        
+            $('#send').click(function() {
+                // 新規メッセージを投稿
+                messagesRef.push({
+                    name: $('#name').val(),
+                    body: $('#message').val(),
+                    test: $('#test').val()
+                });
+            });
+        </script>
+    </body>
+</html>
+<!-- https://tomokazu-kozuma.com/develop-chat-with-firebase-realtime-database/ -->
